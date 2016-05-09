@@ -6,13 +6,13 @@ This project was created to put elasticsearch indices in source control and depl
 
 Usage:
 ------------
-**esdeploy configure**
+**esdeploy configure**  
 Prompts information for initial server configuration
 
-**esdeploy init <index_name>**
+**esdeploy init [index_name]**  
 Initializes the index for the workflow, which means reading it, storing it as json. Migrating it and adding an alias to it.
 
-**esdeploy deploy <index_name>**
+**esdeploy deploy [index_name]**  
 Deploys the index with matching json file in the working directory. It creates the index, migrates data and moves the alias to it.
 
 Caveats:
