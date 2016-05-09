@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+import click
+from lib.es_env import EsEnv
+from lib.es_ops import EsOps
+from elasticsearch.exceptions import ConnectionError
+
+es_env = EsEnv()
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.option('--es-server-host', prompt='ES Server URL', default='127.0.0.1')
+@click.option('--es-server-port', prompt='ES Server Port', default='9200')
+@click.option('--es-server-ssl', prompt='ES Server SSL', default=False)
+@click.option('--user-name', prompt='ES Auth Username', default='')
+@click.option('--password', prompt='ES Auth Pass', hide_input=True, default='')
+def configure(user_name, password, es_server_host, es_server_port, es_server_ssl):
+    es_env.auth_user = user_name
+    es_env.auth_pass = password
+    es_env.es_host = es_server_host
+    es_env.es_port = es_server_port
+    es_env.es_ssl = es_server_ssl
+
+@cli.command()
+@click.argument('index')
+def init(index):
+    if es_env.check_config():
+        es_ops = EsOps()
+        try:
+            es_ops.initialize_index(index)
+        except ConnectionError, e:
+            print "Connection Error"
+    else:
+        print "mega erol"
+
+
+@cli.command()
+@click.argument('index')
+def deploy(index):
+    if es_env.check_config():
+        es_ops = EsOps()
+        try:
+            es_ops.migrate_index(index)
+        except ConnectionError, e:
+            print "Connection Error"
+    else:
+        print "mega erol"
+
+if __name__ == '__main__':
+    cli()
+
+
+
+

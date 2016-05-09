@@ -1,0 +1,76 @@
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "fotv_ngram": {
+          "type": "edge_ngram",
+          "min_gram": 3,
+          "max_gram": 20
+        },
+        "turkish_lowercase": {
+          "type": "lowercase",
+          "language": "turkish"
+        }
+      },
+      "analyzer": {
+        "fotv_search_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "apostrophe",
+            "turkish_lowercase",
+            "asciifolding"
+          ]
+        },
+        "fotv_index_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "apostrophe",
+            "turkish_lowercase",
+            "asciifolding",
+            "fotv_ngram"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "index": "no"
+        },
+        "name": {
+          "type": "string",
+          "analyzer": "fotv_index_analyzer",
+          "search_analyzer": "fotv_search_analyzer"
+        },
+        "description": {
+          "type": "string",
+          "analyzer": "fotv_index_analyzer",
+          "search_analyzer": "fotv_search_analyzer"
+        },
+        "search_image": {
+          "type": "string",
+          "index": "no"
+        },
+        "category_names": {
+          "type": "string",
+          "index": "no"
+        },
+        "cast": {
+          "type": "string",
+          "analyzer": "fotv_index_analyzer",
+          "search_analyzer": "fotv_search_analyzer"
+        },
+        "director_name": {
+          "type": "string",
+          "analyzer": "fotv_index_analyzer",
+          "search_analyzer": "fotv_search_analyzer"
+        }
+      }
+    }
+  }
+}
