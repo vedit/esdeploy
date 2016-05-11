@@ -31,9 +31,11 @@ class EsOps(object):
     def _get_index(self, index):
         index_mapping = self._es.indices.get_mapping(index)
         index_settings = self._es.indices.get_settings(index)
-        index_mapping['settings'] = {'analysis': index_settings[
-            index]['settings']['index']['analysis']}
-        print index_mapping
+        try:
+            index_mapping['settings'] = {'analysis': index_settings[
+                index]['settings']['index']['analysis']}
+        except KeyError, e:
+            pass
         return index_mapping
 
     def _create_index(self, index, body):
