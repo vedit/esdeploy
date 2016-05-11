@@ -15,6 +15,25 @@ Initializes the index for the workflow, which means reading it, storing it as js
 **esdeploy deploy [index_name]**  
 Deploys the index with matching json file in the working directory. It creates the index, migrates data and moves the alias to it.
 
+Intended Workflow
+-------------
+Annotating the following chart; esindices is the repository folder and the subdirectories are created per-environment basis. Each shoud be configured with the command `esdeploy configure` and used accordingly. 
+```
+esindices
+├── sb
+│   ├── index_a.json
+│   ├── index_b.json
+│   └── esdeploy.json
+├── qa
+│   ├── index_a.json
+│   ├── index_b.json
+│   └── esdeploy.json
+└── stg
+    ├── index_a.json
+    ├── index_b.json
+    └── esdeploy.json
+```
+
 Caveats:
 ------------
 * Indices shouldn't have an alias prior to init
