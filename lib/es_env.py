@@ -3,6 +3,7 @@ from lib.config_manager import ConfigManager
 
 
 class EsEnv(object):
+
     def __init__(self):
         self._config = ConfigManager()
 
@@ -55,14 +56,14 @@ class EsEnv(object):
         return True
 
     def build_conn_string(self):
-        conn_string = list()
-        conn_string.append([self.es_host])
+        conn_string = dict()
+        conn_string['host'] = self.es_host
         if self.auth_user and self.auth_pass:
-            conn_string.append({'http_auth': (self.auth_user, self.auth_pass)})
+            conn_string['http_auth'] = (self.auth_user, self.auth_pass)
         if self.es_ssl:
             import certifi
 
-            conn_string.append({'use_ssl': True})
-            conn_string.append({'verify_certs': True})
-            conn_string.append({'ca_certs': certifi.where()})
+            conn_string['use_ssl'] = True
+            conn_string['verify_certs'] = True
+            conn_string['ca_certs'] = certifi.where()
         return conn_string

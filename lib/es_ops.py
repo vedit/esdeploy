@@ -3,11 +3,12 @@ import json
 from lib.es_env import EsEnv
 from elasticsearch import Elasticsearch, helpers
 
+
 class EsOps(object):
 
     def __init__(self):
         es_env = EsEnv()
-        self._es = Elasticsearch(*es_env.build_conn_string())
+        self._es = Elasticsearch(**es_env.build_conn_string())
 
     def migrate_index(self, index_alias):
         old_index = self._get_index_from_alias(index_alias)
@@ -30,7 +31,8 @@ class EsOps(object):
     def _get_index(self, index):
         index_mapping = self._es.indices.get_mapping(index)
         index_settings = self._es.indices.get_settings(index)
-        index_mapping['settings'] = {'analysis': index_settings[index]['settings']['index']['analysis']}
+        index_mapping['settings'] = {'analysis': index_settings[
+            index]['settings']['index']['analysis']}
         print index_mapping
         return index_mapping
 
@@ -81,7 +83,3 @@ class EsOps(object):
         index = self._es.indices.get_alias(name=index_alias).keys()[0]
         print index
         return index
-
-
-
-
