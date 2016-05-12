@@ -10,7 +10,7 @@ Usage:
 Prompts information for initial server configuration
 
 **esdeploy init [index_name]**  
-Initializes the index for the workflow, which means reading it, storing it as json. Migrating it and adding an alias to it.
+Initializes the index for the workflow. If the index exists on the server, stores mapping and settings as json. Migrating it and adding an alias to it. If the index doesn't exist, it searches for a matching file to create and initialize.
 
 **esdeploy deploy [index_name]**  
 Deploys the index with matching json file in the working directory. It creates the index, migrates data and moves the alias to it.
