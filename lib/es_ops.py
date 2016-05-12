@@ -2,6 +2,7 @@ __author__ = 'hexenoid'
 import json
 from lib.es_env import EsEnv
 from elasticsearch import Elasticsearch, helpers
+import sys
 
 
 class EsOps(object):
@@ -29,7 +30,11 @@ class EsOps(object):
         self._add_alias(new_index, index)
 
     def _get_index(self, index):
-        index_mapping = self._es.indices.get_mapping(index)
+        try:
+            index_mapping = self._es.indices.get_mapping(index)[index]
+        except KeyError, e:
+            print >> sys.stderr, 'This index is Already initialized'
+            sys.exit(1)
         index_settings = self._es.indices.get_settings(index)
         try:
             index_mapping['settings'] = {'analysis': index_settings[
