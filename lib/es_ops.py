@@ -6,7 +6,6 @@ import sys
 
 
 class EsOps(object):
-
     def __init__(self):
         es_env = EsEnv()
         self._es = Elasticsearch(**es_env.build_conn_string())
@@ -21,6 +20,18 @@ class EsOps(object):
         self._close_index(old_index)
 
     def initialize_index(self, index):
+        if self._es.indices.exists(index):
+            self._initialize_from_server(index)
+        else:
+            self._initialize_from_file(index)
+
+    def _initialize_from_file(self, index):
+        index_config = EsOps._read_index_mapping(index)
+        new_index = self._bump_version(index)
+        self._create_index(new_index, index_config)
+        self._add_alias(new_index, index)
+
+    def _initialize_from_server(self, index):
         index_config = self._get_index(index)
         new_index = self._bump_version(index)
         self._write_index_mapping(index, index_config)
@@ -84,7 +95,8 @@ class EsOps(object):
         return "%s%s%s" % (index_name_parts[0], '%', version)
 
     def _migrate_data(self, new_index, old_index):
-        helpers.reindex(self._es, old_index, new_index)
+        if self._es.indices.exists(new_index) and self._es.indices.exists(old_index):
+            helpers.reindex(self._es, old_index, new_index)
 
     def _get_index_from_alias(self, index_alias):
         index = self._es.indices.get_alias(name=index_alias).keys()[0]
