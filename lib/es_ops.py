@@ -2,6 +2,7 @@ __author__ = 'hexenoid'
 import json
 from lib.es_env import EsEnv
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch.exceptions import NotFoundError
 import sys
 
 
@@ -99,6 +100,10 @@ class EsOps(object):
             helpers.reindex(self._es, old_index, new_index)
 
     def _get_index_from_alias(self, index_alias):
-        index = self._es.indices.get_alias(name=index_alias).keys()[0]
+        try:
+            index = self._es.indices.get_alias(name=index_alias).keys()[0]
+        except NotFoundError, e:
+            print >> sys.stderr, 'This index is NOT initialized, initialize it first'
+            sys.exit(1)
         print index
         return index
